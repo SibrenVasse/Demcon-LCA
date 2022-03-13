@@ -1,0 +1,21 @@
+name: "Clang-format"
+
+on:
+  push:
+    branches: '**'
+  pull_request:
+    branches: [ main ]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: DoozyX/clang-format-lint-action@v0.13
+      with:
+        source: '.'
+        extensions: 'h,cpp'
+        clangFormatVersion: 13
+        style: "file"
