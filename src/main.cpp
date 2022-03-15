@@ -20,11 +20,11 @@
  * @param[in,out] lca_array lca::Automaton object
  * @param[in,out] n_gens    number of generations
  */
-void parseInput(lca::Automaton &lca_array, long int &n_gens);
+void parseInput(lca::Automaton &lca_array, long &n_gens);
 
 int main() {
     lca::Automaton lca_array{};
-    long int n_gens{0};
+    long n_gens{0};
     try {
         // Read input from stdin
         parseInput(lca_array, n_gens);
@@ -45,7 +45,7 @@ int main() {
 #endif
 
     // Loop over number of requested generations
-    for (int n{1}; n < n_gens; ++n) {
+    for (long n{1}; n < n_gens; ++n) {
         // Move array to next generation
         lca_array.evolve();
 #ifndef DISABLE_OUTPUT
@@ -56,7 +56,7 @@ int main() {
     return 0;
 }
 
-void parseInput(lca::Automaton &lca_array, long int &n_gens) {
+void parseInput(lca::Automaton &lca_array, long &n_gens) {
     // Fetch automaton type and set cell type
     std::string buffer = io::readString(std::cin);
     if (buffer != "A" && buffer != "B" && buffer != "U") {
