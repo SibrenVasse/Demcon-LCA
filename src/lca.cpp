@@ -55,6 +55,10 @@ void Automaton::setType(const std::string_view new_type) {
         throw std::invalid_argument("Invalid automaton type");
     }
 
+    initRules();
+}
+
+void Automaton::initRules() {
     // Copy rules for type from default_rules to this->rules
     std::copy(cbegin(this->default_rules[static_cast<size_t>(this->type)]),
               cend(this->default_rules[static_cast<size_t>(this->type)]),

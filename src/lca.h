@@ -35,7 +35,9 @@ namespace lca {
 
         // Constructor with type and size
         Automaton(TYPE autom_type, size_t n_cells)
-            : type(autom_type), array(n_cells, 0) {}
+            : type(autom_type), array(n_cells, 0) {
+            initRules();
+        }
         Automaton() = default;
 
         /** Number of rules neccesary to describe a Automaton. */
@@ -90,6 +92,8 @@ namespace lca {
                 {{0, 1, 0, 1, 1, 1, 1, 0},  // Rules for Automaton type A
                  {0, 1, 1, 0, 1, 0, 1, 0},  // Rules for Automaton type B
                  {0}}};  // Default rules for Automaton type U (user defined)
+
+        void initRules();
     };
 
     /** Friend function to output the Automaton to std::ostream. */
