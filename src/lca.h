@@ -76,7 +76,8 @@ namespace lca {
         /** Indexing operator to modify or access the cell array */
         unsigned char &operator[](size_t);
 
-        friend std::ostream &operator<<(std::ostream &out, const Automaton &c);
+        friend std::ostream &operator<<(std::ostream &out,
+                                        const Automaton &autom);
 
        private:
         /** Automaton Type. */
@@ -97,6 +98,6 @@ namespace lca {
     };
 
     /** Friend function to output the Automaton to std::ostream. */
-    std::ostream &operator<<(std::ostream &out, const Automaton &c);
+    std::ostream &operator<<(std::ostream &out, const Automaton &autom);
 
 }  // namespace lca

@@ -57,7 +57,7 @@ As the problem itself is not a very hard one to solve, I focused on the judging 
 
   The time complexity of the program is `O(n)` for both the number of generations and the number of cells. The program does not do any (re)allocation for thew new generations, so the memory complexity is also `O(n)`.
 
-  Two benchmarks are available under `tests/bench*`. One with 100 cells and 100'000 generations (my machine: ~80ms), and one with 100'000 cells and 100 generations (my machine: ~80ms). Most of this time is spent on sending output to std::cout. When the program is compiled with `-DDISABLE_OUTPUT=ON` it takes just ~10ms. With this option you can more easily benchmark the internal calculations of the program, without the extra noise.
+  Two benchmarks are available under `tests/bench*`. One with 100 cells and 100'000 generations (my machine: ~40ms), and one with 100'000 cells and 100 generations (my machine: ~35ms). Most of this time is spent on sending output to std::cout. When the program is compiled with `-DDISABLE_OUTPUT=ON` it takes just ~10ms. With this option you can more easily benchmark the internal calculations of the program, without the extra noise.
 
   These benchmarks were used to do a more in depth review of the performance of the program. Using `perf record ./lca < ../tests/bench-cells` to record performance data and the result with [Hotspot](https://github.com/KDAB/hotspot). These identified two 'hotspots' in the program: `Automaton::evolve()` and `lca::operator<<`, which was no surprise as these are doing most of the work. These two then became my main focus when improving the performance of the program.
 
@@ -210,6 +210,29 @@ Comparison:
 |![branchlesss](screenshots/bench-io-charmap.png)|
 |:--:|
 | Conditional vs charmap |
+
+We can improve the efficency of the program even more: if we can limit the number of writes to std::cout. We can do this by saving the output to a buffer and writing it all at once.
+
+Old:
+```c++
+std::array<char, 2> char_map = {' ', '*'};
+cout << char_map[array[i]];
+```
+New:
+```c++
+std::array<char, 2> char_map = {' ', '*'};
+std::string buff;
+std::transform(begin(array), end(array),
+              std::back_inserter(buff),
+              [&char_map](unsigned char ca) { return char_map[ca]; });
+std::cout << buff;
+```
+
+With this change the program is twice as fast in our benchmarks!
+
+|![buffered io](screenshots/bench-io-transform.png)|
+|:--:|
+| Unbuffered vs Buffered IO |
 
 This only means that I'm no longer using the implementation of the provided print function.
 

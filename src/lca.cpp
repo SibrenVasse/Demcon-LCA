@@ -31,15 +31,20 @@ void Automaton::evolve() {
     }
 }
 
-std::ostream &lca::operator<<(std::ostream &out, const Automaton &c) {
+std::ostream &lca::operator<<(std::ostream &out, const Automaton &autom) {
     // Lookup instead of expensive branch. See README.md
     const std::array<char, 2> char_map = {' ', '*'};
-    for (auto const &i : c.array) {
-        std::cout.put(char_map[i]);
-    }
+
+    // Use buffer to cache writes. See README.md
+    std::string out_buffer{};
+    out_buffer.reserve(autom.array.size());
+
+    std::transform(begin(autom.array), end(autom.array),
+                   std::back_inserter(out_buffer),
+                   [&char_map](unsigned char ca) { return char_map[ca]; });
 
     // Don't use endl, we don't need to flush every line
-    std::cout.put('\n');
+    out << out_buffer << '\n';
     return out;
 }
 
